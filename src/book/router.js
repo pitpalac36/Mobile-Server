@@ -9,7 +9,6 @@ router.get('/books', async (ctx) => {
   const userId = ctx.state.user._id;
   response.body = await bookStore.find({ userId });
   response.status = 200; // ok
-  //console.log(response.body);
 });
 
 router.get('/book/:id', async (ctx) => {
@@ -29,13 +28,12 @@ router.get('/book/:id', async (ctx) => {
 });
 
 const createBook = async (ctx, book, response) => {
-  //console.log("SE CREEAZA O CARTE");
+  console.log("SE CREEAZA O CARTE");
   try {
     const userId = ctx.state.user._id;
     book.userId = userId;
     response.body = await bookStore.insert(book);
     response.status = 201; // created
-    console.log(response.body);
     broadcast(userId, { type: 'created', payload: response.body });
   } catch (err) {
     response.body = { message: err.message };
@@ -62,7 +60,6 @@ router.put('/book/:id', async (ctx) => {
   if (updatedCount === 1) {
     response.body = book;
     response.status = 200; // ok
-    console.log(book);
     broadcast(userId, { type: 'updated', payload: book });
   } else {
     response.body = { message: 'Resource no longer exists' };
